@@ -1,0 +1,136 @@
+﻿<html>
+<head>
+	<meta content="IE=10" http-equiv="X-UA-Compatible" />
+	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <title>首页 - OFFICE文档控件</title>
+    <link href="../css/ntkoStyle.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="../js/ntko.js"></script>
+	<style type="text/css">
+    body {
+      height:100% ;
+      width:100%;
+      margin:0px;
+      padding:0px;
+      overflow:hidden;
+    }
+    #officecontrol {
+      height:95%;
+      width:100%;
+      position:absolute;
+    }
+    .myButton {
+      height:5%;
+      background-color:#5F91E6;
+      display:inline-block;
+      color:#ffffff;
+      font-family:Arial;
+      font-size:16px;
+      font-weight:bold;
+    }
+    .myButton:hover {
+      background-color:#1218BD;
+    }
+    .myButton:active {
+      position:relative;
+      top:1px;
+    }
+   </style>
+	<script type="text/javascript">
+	
+	function getQueryString(name) { 
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+		var r = window.location.search.substr(1).match(reg); 
+		if (r != null) return unescape(r[2]); 
+		return null; 
+	}
+
+  window.onbeforeunload = function(){
+    var fileType=getQueryString('fileType');
+    if(fileType != "MSWord" || fileType != "MSWordX")
+      return;
+	  if(cmd == 1)
+	    return;
+		 if(confirm("文档即将关闭，是否保存文档?")){
+       datasetUid=getQueryString('datasetUid');
+       taskId=getQueryString('taskId');
+       fileName=getQueryString('fileName');
+		 	SaveOfficeToServerDir(datasetUid,taskId,fileName);
+		 }
+	}
+
+	</script>
+
+</head>
+
+<body onload="imanFileUid=getQueryString('imanFileUid');fileType=getQueryString('fileType');init(imanFileUid,fileType);" onunload="opener.ntkoCloseEvent();">
+
+	<form id="form1" enctype="multipart/form-data" method="post" style="padding:0px;margin:0px;">
+  <input class="myButton" id="postilButton" type="button" style="display:none;" value="批注模式" onclick="postil()" />
+    <input class="myButton" id="saButton" type="button" style="display:none;" value="保存" onclick="datasetUid=getQueryString('lastDatasetUid');fileName=getQueryString('lastFileName');taskId=getQueryString('taskId');SaveOfficeToServer(datasetUid,fileName,taskId)" />
+	<input class="myButton" id="saveButton" type="button" style="display:none;" value="保存并退出" onclick="datasetUid=getQueryString('lastDatasetUid');fileName=getQueryString('lastFileName');taskId=getQueryString('taskId');SaveOfficeToServerDir(datasetUid,fileName,taskId)" />
+  <input class="myButton" id="noSaveButton" type="button" style="display:none;" value="不保存退出" onclick="quit()" />
+  <div  id="officecontrol" class="officecontrol" >
+		<script language="javascript" type="text/javascript" src="../js/ntkoofficecontrol.min.js"></script>
+	</div>
+	</form>
+	<!--文档打开后触发事件-->
+	<script language="JScript" for="TANGER_OCX"  event="OnDocumentOpened(str,obj)">
+	ntkoondocumentopened(str,obj);
+
+	</script>
+	<!--文档关闭后触发事件-->
+	<script language="JScript" for="TANGER_OCX" event="OnDocumentClosed()">
+		//if(cmd == 4)ntkoSendDataToParentPage();
+	</script>	
+	<!--自定义工具栏按钮触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnCustomToolBarCommand(btnIdx)">
+		CustomToolBarCom(btnIdx);
+	</script>
+
+	<script language="javascript" for="TANGER_OCX" event="OnDocActivated(IsActivated)">
+	</script>
+	<script language="javascript" for="TANGER_OCX" event="OnSaveToURL(type,code,html)">
+	</script>
+	<!--自定义菜单栏触发事件-->
+	<script language="JScript" for="TANGER_OCX" event="OnCustomMenuCmd2(menuPos,submenuPos,subsubmenuPos,menuCaption,menuID)">
+	CustomMenuCmd(menuPos,submenuPos,subsubmenuPos,menuCaption,menuID);
+	</script>
+	<!--自定义全屏触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnScreenModeChanged(IsFullScreenMode)">
+	</script>
+	<!--自定义文件菜单触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnFileCommand(Item, IsCancel)">
+	FileCommand(Item, IsCancel);
+	</script>
+	<!--自定义文件菜单触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnWordBeforeRightClick(Item, IsCancel)">
+	//WordBeforeRightClick(Item, IsCancel);
+	</script>
+	<!--自定义word光标改变单触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnWordWPSSelChange( )">
+		if(Selection.start!=Selection.end){
+			//Selection.MoveRight ();
+		}
+	</script>
+	<!--自定义EXCEL光标改变单触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnSheetSelectionChange(SheetName, row, col)">
+	</script>
+	<!--自定义EXCEL双击触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnSheetBeforeDoubleClick(SheetName, row, col, IsCancel)">
+	//alert("OnSheetBeforeDoubleClick"+row);
+	</script>
+	<!--自定义EXCEL单元格改变触发事件-->
+	<script language="javascript" for="TANGER_OCX" event="OnSheetChange(SheetName, row, col)">
+	</script>
+	<script language="JScript" for="TANGER_OCX" event=" OnClickCustomContextMenu(MenuIndex)">
+	ClickCustomContextMenu(MenuIndex);
+	</script>
+	<script language="JScript" for="TANGER_OCX" event=" OnCustomButtonOnMenuCmd(btnPos,btnCaption,btnCmdid)">
+	    //CustomButtonOnMenuCmd(btnPos,btnCaption,btnCmdid);
+	</script>
+	<script language="JScript" for="TANGER_OCX" event=" OnAddTemplateFromURL(lFuncType, lStatCode, bstrRetData)">
+
+	</script>
+
+</body>
+</html>
